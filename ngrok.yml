@@ -1,0 +1,6 @@
+version: 3
+authtoken: 2oz0AaGJuJkSTdHLaw8asTZOZzI_3jMLcGZRaFJmwCqtpypaB
+tunnels:
+  httpbin:
+    proto: http
+    addr: 8080
