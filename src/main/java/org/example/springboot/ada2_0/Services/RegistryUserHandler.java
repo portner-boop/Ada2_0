@@ -30,10 +30,11 @@ public class RegistryUserHandler {
                 user.setGroup_id(groupIdOptional.get()); // Используем полученный groupId
                 return user;
             } else {
-                throw new GroupNotFoundException("Группа с именем '" + userreg.getPg_password() + "' не найдена.");
+
+                return null;
             }
         } else {
-            throw new UsernameAlreadyExistsException("Пользователь с таким именем уже существует.");
+            return null;
         }
     }
     public class GroupNotFoundException extends RuntimeException {

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,16 +18,24 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecureConfig {
     @Autowired
     private UserDetailsService userDetailsService;
-
+    @Autowired
+    private CustomAuthenticationSuccessHandler successHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable).authorizeRequests(reg-> {
-                    reg.requestMatchers("/registration/user").permitAll();
-                    reg.anyRequest().authenticated();}
-                ).formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login")
-                .successHandler((request, response, authentication) ->
-                {
-                    response.sendRedirect("/home/{group_id}")}).permitAll()).build();
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/registration/user", "/login/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .successHandler(successHandler)
+                        .permitAll()
+                )
+                .logout(LogoutConfigurer::permitAll);
+
+        return http.build();
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
