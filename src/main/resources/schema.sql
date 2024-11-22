@@ -20,7 +20,7 @@ create table if not exists users(
 
 );
 create table if not exists resources(
-    group_id Integer primary key,
+    group_id Integer,
     name varchar(255),
     constraint fk_resources foreign key (group_id) references groups (id)
 );

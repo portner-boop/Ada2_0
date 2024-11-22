@@ -123,6 +123,27 @@
         .close:hover {
             color: black;
         }
+        .modal-content input[type="text"],
+        .modal-content input[type="file"]{
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .modal-content button{
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -139,62 +160,74 @@
         </div>
     </div>
 
-</div>
-<div class="add-button" onclick="openModal()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-    </svg>
-</div>
 
-<div id="myModal" class="modal" >
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <input type="file" id="fileInput" accept="image/*">
-        <button onclick="saveFile()">Загрузить</button>
+    <div class="add-button" onclick="openModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
     </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>Add New Item:</p>
+            <input type="text" id="itemName" placeholder="Item Name">
+            <input type="file" id="itemFile">
+            <button onclick="addItem()">Add</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    function saveFile() {
-        const groupId = 1;
-        const fileName = document.getElementById("fileName").value || 'uploaded_file';
-        const fileInput = document.getElementById("fileInput");
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert("Please select a file.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("fileName", fileName);
-
-        fetch(`/${groupId}/image`, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
-                    });
-                }
-                return response.text(); // Читаем текст ответа
-            })
-            .then(data => {
-                alert(data); // Выводим сообщение от сервера
-                closeModal();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('File upload failed: ' + error.message);
-            });
+    function openModal() {
+        document.getElementById("myModal").style.display = "block";
     }
 
-</script>
+    function closeModal() {
+        document.getElementById("myModal").style.display = "none";
+    }
 
+    function addItem() {
+        const groupName = document.getElementById("itemName").value;
+        const file = document.getElementById("itemFile").files[0];
+        const fileName = file.name; // Get filename directly from the File object
+
+        if (groupName && file) {
+            const formData = new FormData();
+            formData.append('groupName', groupName);
+            formData.append('file', file);
+            formData.append('fileName', fileName); // Add filename to FormData
+
+            fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => Promise.reject(new Error(text)));
+                    }
+                    return response.json(); // Parse response as JSON
+                })
+                .then(data => {
+                    if (data.message) { //Check for the message in the response
+                        console.log('Success:', data.message);
+                        closeModal();
+                    } else if (data.error) {
+                        console.error('Error:', data.error);
+                        alert('Error uploading file: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error uploading file: ' + error.message);
+                });
+        } else {
+            alert('Please fill all fields');
+        }
+    }
+</script>
 
 </body>
 </html>

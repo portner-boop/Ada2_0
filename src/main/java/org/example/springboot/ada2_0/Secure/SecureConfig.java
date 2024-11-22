@@ -3,7 +3,6 @@ package org.example.springboot.ada2_0.Secure;
 import io.minio.MinioClient;
 import org.example.springboot.ada2_0.Props.MinioProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,20 +15,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableAutoConfiguration
-public class SecureConfig {
+public class SecureConfig { // Removed @EnableAutoConfiguration
+
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
     private CustomAuthenticationSuccessHandler successHandler;
+
     @Autowired
-    private MinioProperties minioProperties;
+    private MinioProperties minioProperties; // Inject directly
+
+
+    @Bean
+    public MinioClient minioClient() {
+        return MinioClient.builder()
+                .endpoint(minioProperties.getUrl())
+                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                .build();
+    }
+
+    // REMOVED: @Bean public MinioProperties minioProperties() { ... }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/registration/user", "/login/**").permitAll()
+                        .requestMatchers("/registration/user", "/login/**", "/upload").permitAll() //Added /upload
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -41,21 +54,18 @@ public class SecureConfig {
 
         return http.build();
     }
-    @Bean
-    public MinioClient minioClient()  {
-        return MinioClient.builder()
-                .endpoint(minioProperties.getUrl())
-                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
-                .build();
-    }
+
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         return userDetailsService;
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

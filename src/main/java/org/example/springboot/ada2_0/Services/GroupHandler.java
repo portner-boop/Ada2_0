@@ -14,8 +14,7 @@ import java.util.Optional;
 public class GroupHandler {
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private ResourceService resourceService;
+
 
     //    public String validateGroup(RegistryUser registryUser) {
 //        if(groupRepository.findByName(registryUser.getPg_password()).isPresent()){
@@ -28,13 +27,7 @@ public class GroupHandler {
         return groupRepository.findByName(registryUser.getPg_password())
                 .map(Groups::getId);
     }
-    public void uploadResource(int id, Resource resource) throws IOException {
-        Groups group = groupRepository.findById(id).get();
-        String name = resourceService.upload(resource);
-        group.getResources().add(name);
-        groupRepository.save(group);
 
-    }
 
 
 }
