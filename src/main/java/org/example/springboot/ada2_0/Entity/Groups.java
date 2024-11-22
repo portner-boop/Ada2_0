@@ -17,8 +17,10 @@ public class Groups {
     private int id;
     @Column(name="group_name")
     private String name;
-    @OneToMany(mappedBy = "group_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Resources> resources = new ArrayList<>();
+    @Column(name="res")
+    @CollectionTable(name="resources")
+    @ElementCollection
+    private List<String> resources ;
 
     public Groups() {}
 
@@ -26,8 +28,11 @@ public class Groups {
         this.id = id;
         this.name = name;
     }
-    public void addResorce(){
-        resources.add(new Resources());
+    public void addResource(String  name){
+        if (this.resources == null){
+            this.resources = new ArrayList<>();
+        }
+        resources.add(name);
     }
 
 }

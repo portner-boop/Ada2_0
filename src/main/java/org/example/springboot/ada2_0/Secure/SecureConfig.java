@@ -1,5 +1,7 @@
 package org.example.springboot.ada2_0.Secure;
 
+import io.minio.MinioClient;
+import org.example.springboot.ada2_0.Props.MinioProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,8 @@ public class SecureConfig {
     private UserDetailsService userDetailsService;
     @Autowired
     private CustomAuthenticationSuccessHandler successHandler;
+    @Autowired
+    private MinioProperties minioProperties;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,6 +40,13 @@ public class SecureConfig {
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();
+    }
+    @Bean
+    public MinioClient minioClient()  {
+        return MinioClient.builder()
+                .endpoint(minioProperties.getUrl())
+                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                .build();
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

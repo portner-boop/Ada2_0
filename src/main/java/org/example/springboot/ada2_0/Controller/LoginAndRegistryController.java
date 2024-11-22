@@ -37,7 +37,6 @@ public class LoginAndRegistryController {
             model.addAttribute("user", user);
             return "registration";
         }
-
        MyUser myUser = registryUserHandler.userHandlerProc(user);
         if(myUser != null){
             userHandler.saveUser(myUser);
