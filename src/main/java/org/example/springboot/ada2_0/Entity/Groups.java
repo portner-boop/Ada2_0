@@ -17,10 +17,8 @@ public class Groups {
     private int id;
     @Column(name="group_name")
     private String name;
-    @Column(name="res")
-    @CollectionTable(name="resources")
-    @ElementCollection
-    private List<String> resources ;
+//    @OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+//    private List<Resource> resources ;
 
     public Groups() {}
 
@@ -28,11 +26,17 @@ public class Groups {
         this.id = id;
         this.name = name;
     }
-    public void addResource(String  name){
-        if (this.resources == null){
-            this.resources = new ArrayList<>();
-        }
-        resources.add(name);
-    }
+//    public void addResource(Resource resource) {
+//        if (this.resources == null){
+//            this.resources = new ArrayList<>();
+//        }
+//        resources.add(resource);
+//
+//    }
+//    public void resources(){
+//        for (Resource r : resources){
+//            System.out.println(r.toString());
+//        }
+//    }
 
 }

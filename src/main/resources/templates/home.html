@@ -150,7 +150,29 @@
 <div class="sidebar">
 
 </div>
-<div class="main-content">
+<div id="fileList"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    jQuery(document).ready(function($) {
+        $.ajax({
+            url: "/api/files",
+            type: "GET",
+            success: function(data) {
+                let fileList = $("#fileList");
+                if (data && data.length > 0) {
+                    let listItems = data.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join(""); //Corrected template literal
+                    fileList.html("<ul>" + listItems + "</ul>");
+                } else {
+                    fileList.text("No files found.");
+                }
+            },
+            error: function(error) {
+                console.error("Error:", error);
+                $("#fileList").text("Error loading file list.");
+            }
+        });
+    });
+</script>
     <div class="search-container">
         <div class="search">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">

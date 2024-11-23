@@ -1,5 +1,6 @@
 package org.example.springboot.ada2_0.Services;
 
+import jakarta.transaction.Transactional;
 import org.example.springboot.ada2_0.Dao.GroupRepository;
 import org.example.springboot.ada2_0.Dto.RegistryUser;
 import org.example.springboot.ada2_0.Entity.Groups;
@@ -26,6 +27,13 @@ public class GroupHandler {
     public Optional<Integer> getGroupId(RegistryUser registryUser) {
         return groupRepository.findByName(registryUser.getPg_password())
                 .map(Groups::getId);
+    }
+    public Groups getGroups( int group_id) {
+        return groupRepository.findById(group_id);
+    }
+    @Transactional
+    public void save(Groups groups) {
+        groupRepository.save(groups);
     }
 
 
