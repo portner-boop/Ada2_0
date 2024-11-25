@@ -143,36 +143,62 @@
         .modal-content button:hover {
             background-color: #45a049;
         }
+        .horizontal-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
+        .search-and-list-container {
+            margin-bottom: 20px; /* Adjust as needed */
+        }
+
+        .search-container {
+            margin-bottom: 10px; /* Space between search and list */
+        }
+
+        .horizontal-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .horizontal-list li {
+            margin-bottom: 10px;
+            border: 1px solid #ddd; /* Added border for better separation */
+            padding: 10px; /* Added padding */
+            border-radius: 5px; /* Added rounded corners */
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1); /* Added subtle shadow */
+        }
+
+        .horizontal-list img {
+            max-width: 50px;
+            max-height: 50px;
+            margin-right: 10px;
+            display: block; /* Makes sure the image is a block element */
+        }
+
+        .horizontal-list a {
+            text-decoration: none;
+            color: #333;
+            display: flex; /* Align image and text */
+            align-items: center; /* Vertically align */
+        }
+
+        .horizontal-list a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
     </style>
 </head>
 <body>
 <div class="sidebar">
-
+    <!-- Sidebar content here -->
 </div>
-<div id="fileList"></div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    jQuery(document).ready(function($) {
-        $.ajax({
-            url: "/api/files",
-            type: "GET",
-            success: function(data) {
-                let fileList = $("#fileList");
-                if (data && data.length > 0) {
-                    let listItems = data.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join(""); //Corrected template literal
-                    fileList.html("<ul>" + listItems + "</ul>");
-                } else {
-                    fileList.text("No files found.");
-                }
-            },
-            error: function(error) {
-                console.error("Error:", error);
-                $("#fileList").text("Error loading file list.");
-            }
-        });
-    });
-</script>
+<div class="main-content">
     <div class="search-container">
         <div class="search">
             <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -181,28 +207,60 @@
             <input type="text" placeholder="Search..."/>
         </div>
     </div>
-
-
-    <div class="add-button" onclick="openModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-        </svg>
-    </div>
-
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <p>Add New Item:</p>
-            <input type="text" id="itemName" placeholder="Item Name">
-            <input type="file" id="itemFile">
-            <button onclick="addItem()">Add</button>
-        </div>
-    </div>
-
+    <div id="fileList"></div>
 </div>
 
+<div class="add-button" onclick="openModal()">+</div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Add New Item:</p>
+        <input type="text" id="itemName" placeholder="Item Name">
+        <input type="file" id="itemFile">
+        <button onclick="addItem()">Add</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $(document).ready(function($) {
+        function  load(){
+            $.ajax({
+                url: "/api/files",
+                type: "GET",
+                success: function(data) {
+                    let fileList = $("#fileList");
+                    if (fileList.length) {
+                        if (data && data.length > 0) {
+                            let listItems = data.map(resource => `
+                                <li>
+                                    <a href="${resource.url}" target="_blank">
+
+                                        ${resource.name}
+                                    </a>
+                                </li>
+                            `).join("");
+                            fileList.html(`<ul class="horizontal-list">${listItems}</ul>`);
+                        } else {
+                            fileList.text("No files found.");
+                        }
+                    }
+                },
+                error: function(error) {
+                    console.error("AJAX Error:", error);
+                    $("#fileList").text("Error loading file list.");
+                }
+            });
+        }
+        function myFunction() {
+            console.log("Эта функция выполняется каждую секунду");
+            load();
+            setTimeout(myFunction, 1000);
+        }
+
+        myFunction()
+
+    });
     function openModal() {
         document.getElementById("myModal").style.display = "block";
     }
@@ -220,7 +278,7 @@
             const formData = new FormData();
             formData.append('groupName', groupName);
             formData.append('file', file);
-            formData.append('fileName', fileName); // Add filename to FormData
+            formData.append('fileName', fileName);
 
             fetch('/api/upload', {
                 method: 'POST',
@@ -230,7 +288,9 @@
                     if (!response.ok) {
                         return response.text().then(text => Promise.reject(new Error(text)));
                     }
-                    return response.json(); // Parse response as JSON
+
+                    return response.json();
+
                 })
                 .then(data => {
                     if (data.message) { //Check for the message in the response
@@ -248,7 +308,9 @@
         } else {
             alert('Please fill all fields');
         }
+
     }
+;
 </script>
 
 </body>

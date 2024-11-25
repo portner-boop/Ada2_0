@@ -6,6 +6,13 @@ spring:
     driver-class-name: org.postgresql.Driver
   thymeleaf:
     prefix: classpath:/templates/
+
+    mvc:
+      static-path-pattern: /static/**
+    resources:
+      static-locations: classpath:/static/
+
+
 minio:
     bucket: resources
     url: http://localhost:9000
