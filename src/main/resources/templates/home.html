@@ -224,27 +224,25 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function($) {
-        function  load(){
+        let cachedFileList = null;
+        let lastUpdated = null;
+
+        function loadFileList() {
+            const now = new Date();
+            const cacheAgeThreshold = 10 * 1000; // 10 seconds cache age
+
+            if (cachedFileList && now - lastUpdated < cacheAgeThreshold) {
+                updateFileList(cachedFileList); //Use cached data
+                return;
+            }
+
             $.ajax({
                 url: "/api/files",
                 type: "GET",
                 success: function(data) {
-                    let fileList = $("#fileList");
-                    if (fileList.length) {
-                        if (data && data.length > 0) {
-                            let listItems = data.map(resource => `
-                                <li>
-                                    <a href="${resource.url}" target="_blank">
-
-                                        ${resource.name}
-                                    </a>
-                                </li>
-                            `).join("");
-                            fileList.html(`<ul class="horizontal-list">${listItems}</ul>`);
-                        } else {
-                            fileList.text("No files found.");
-                        }
-                    }
+                    cachedFileList = data;
+                    lastUpdated = now;
+                    updateFileList(data);
                 },
                 error: function(error) {
                     console.error("AJAX Error:", error);
@@ -252,15 +250,38 @@
                 }
             });
         }
-        function myFunction() {
-            console.log("Эта функция выполняется каждую секунду");
-            load();
-            setTimeout(myFunction, 1000);
+
+        function updateFileList(data) {
+            const fileList = $("#fileList");
+            if (fileList.length) {
+                const fragment = document.createDocumentFragment();
+                const ul = document.createElement('ul');
+                ul.className = "horizontal-list";
+
+                if (data && data.length > 0) {
+                    data.forEach(resource => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = resource.url;
+                        a.target = "_blank";
+                        a.textContent = resource.name;
+                        li.appendChild(a);
+                        ul.appendChild(li);
+                    });
+                } else {
+                    ul.textContent = "No files found.";
+                }
+                fragment.appendChild(ul);
+                fileList.empty().append(fragment);
+            }
         }
 
-        myFunction()
+
+        loadFileList(); //Initial load
+        setInterval(loadFileList, 5000); //Check every 5 seconds (adjust as needed)
 
     });
+
     function openModal() {
         document.getElementById("myModal").style.display = "block";
     }
