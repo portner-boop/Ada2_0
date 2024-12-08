@@ -1,4 +1,4 @@
-package org.example.springboot.ada2_0.Secure;
+package org.example.springboot.ada2_0.Configuration;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

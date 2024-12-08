@@ -1,4 +1,4 @@
-package org.example.springboot.ada2_0.Secure;
+package org.example.springboot.ada2_0.Configuration;
 
 import io.minio.MinioClient;
 import org.example.springboot.ada2_0.Props.MinioProperties;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecureConfig { // Removed @EnableAutoConfiguration
+public class SecureConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -23,7 +23,7 @@ public class SecureConfig { // Removed @EnableAutoConfiguration
     private CustomAuthenticationSuccessHandler successHandler;
 
     @Autowired
-    private MinioProperties minioProperties; // Inject directly
+    private MinioProperties minioProperties;
 
 
     @Bean
@@ -33,8 +33,6 @@ public class SecureConfig { // Removed @EnableAutoConfiguration
                 .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
                 .build();
     }
-
-    // REMOVED: @Bean public MinioProperties minioProperties() { ... }
 
 
     @Bean

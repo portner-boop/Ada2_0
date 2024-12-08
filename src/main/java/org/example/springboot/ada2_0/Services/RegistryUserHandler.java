@@ -27,7 +27,7 @@ public class RegistryUserHandler {
             if (groupIdOptional.isPresent()) {
                 user.setPassword(bCryptPasswordEncoder.encode(userreg.getPassword()));
                 user.setUsername(userreg.getUsername());
-                user.setGroup_id(groupIdOptional.get()); // Используем полученный groupId
+                user.setGroup(groupIdOptional.get()); // Используем полученный groupId
                 return user;
             } else {
 

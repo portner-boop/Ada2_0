@@ -42,7 +42,7 @@ public class UploadController {
 
     @PostMapping("/upload")
     @Transactional
-    public ResponseEntity<Map<String, String>> uploadFile(
+    public ResponseEntity<Map<String, Object>> uploadFile(
             @RequestParam("groupName") String groupName,
             @RequestParam("file") MultipartFile file,
             @RequestParam("fileName") String fileName,
@@ -52,10 +52,9 @@ public class UploadController {
             int groupId = (int) session.getAttribute("group_id");
             String uploadedFileName = minioService.uploadFile(file, fileName);
 
-            Map<String, String> response = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
             response.put("message", "Файл успешно загружен: " + uploadedFileName);
             response.put("fileName", uploadedFileName);
-
             Groups group = groupHandler.getGroups(groupId);
             if (group == null) {
                 throw new Exception("Group not found");
@@ -63,14 +62,11 @@ public class UploadController {
             Resource resource = new Resource(fileName);
             resource.setGroups(group);
             resourceService.save(resource);
-            ResponseEntity<List<ResourceDto>> filesResponse = getFileUrls(session);
-
-
-
+//            ResponseEntity<List<ResourceDto>> filesResponse = getFileUrls(session);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            Map<String, String> errorResponse = new HashMap<>();
+            Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", "Ошибка загрузки файла: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

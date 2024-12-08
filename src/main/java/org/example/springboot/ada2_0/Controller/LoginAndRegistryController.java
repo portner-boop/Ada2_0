@@ -1,11 +1,13 @@
 package org.example.springboot.ada2_0.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.example.springboot.ada2_0.Dto.RegistryUser;
 import org.example.springboot.ada2_0.Entity.MyUser;
 import org.example.springboot.ada2_0.Services.RegistryUserHandler;
 import org.example.springboot.ada2_0.Services.UserHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +34,8 @@ public class LoginAndRegistryController {
         return "registration";
     }
     @PostMapping("/registration/user")
-    public String createUser(@Valid @ModelAttribute("user") RegistryUser user, BindingResult bindingResult, Model model){
+    public String createUser(@Valid @ModelAttribute("user") RegistryUser user, BindingResult bindingResult, Model model, HttpSession session){
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
             return "registration";
@@ -40,6 +43,7 @@ public class LoginAndRegistryController {
        MyUser myUser = registryUserHandler.userHandlerProc(user);
         if(myUser != null){
             userHandler.saveUser(myUser);
+            session.setAttribute("user", myUser);
             return "redirect:/login";
 
         }else{
@@ -49,6 +53,15 @@ public class LoginAndRegistryController {
         }
 
 
+    }
+    @GetMapping("/api/user")
+    public ResponseEntity<MyUser> getUser(HttpSession session) {
+        MyUser user = (MyUser) session.getAttribute("user");
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

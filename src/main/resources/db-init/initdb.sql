@@ -13,8 +13,9 @@ create table if not exists users(
 
 );
 create table if not exists resources(
-                                        group_id Integer primary key,
+                                        id serial primary key ,
+                                        group_id Integer ,
                                         name varchar(255),
                                         constraint fk_resources foreign key (group_id) references groups (id)
 );
-insert into groups (id, group_name) values(1,'pi11')
+insert into groups (id, group_name) values(1,'pi11');

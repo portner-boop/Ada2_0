@@ -4,7 +4,7 @@ create schema if not exists tasklist;
 -- drop table groups;
 -- drop table users;
  drop table resources;
--- drop table groups;
+-- drop table mesages;
 create table if not exists groups(
     id Integer primary key,
     group_name varchar(255),
@@ -25,5 +25,12 @@ create table if not exists resources(
     name varchar(255),
     constraint fk_resources foreign key (group_id) references groups (id)
 );
-insert into groups (id, group_name) values(1,'pi11');
-delete  from resources where group_id is null;
+create table if not exists mesages(
+    id bigserial primary key ,
+    message varchar(255) ,
+    sender varchar(255),
+    roomid varchar(255)
+
+);
+-- insert into groups (id, group_name) values(1,'pi11');
+delete from resources where id>6;

@@ -1,4 +1,4 @@
-package org.example.springboot.ada2_0.Secure;
+package org.example.springboot.ada2_0.Configuration;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

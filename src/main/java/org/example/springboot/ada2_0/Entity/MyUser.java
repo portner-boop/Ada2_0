@@ -17,14 +17,14 @@ public class MyUser {
     @Column(name="password")
     private String password;
     @Column(name = "group_id")
-    private int group_id;
+    private int group;
 
     public MyUser() {}
 
     public MyUser(long id, String password, int group_id) {
         this.id = id;
         this.password = password;
-        this.group_id = group_id;
+        this.group = group_id;
     }
 
 }
