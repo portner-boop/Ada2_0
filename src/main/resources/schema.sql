@@ -3,8 +3,8 @@ create schema if not exists tasklist;
 --  alter table groups rename column resources to res;
 -- drop table groups;
 -- drop table users;
- drop table resources;
--- drop table mesages;
+--  drop table resources;
+--  drop table mesages;
 create table if not exists groups(
     id Integer primary key,
     group_name varchar(255),
@@ -33,4 +33,4 @@ create table if not exists mesages(
 
 );
 -- insert into groups (id, group_name) values(1,'pi11');
-delete from resources where id>6;
+delete from mesages where id>0;

@@ -21,108 +21,89 @@
             background-color: #e8e0ff;
             margin: 0;
             display: flex;
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
         }
 
         .sidebar {
             background-color: #d0c4ff;
             width: 300px;
-            min-height: 100vh;
+            min-width: 300px;
+            height: 100vh; /* for full viewport height */
             padding: 20px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            min-width: 100px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* Needed for absolute positioning of input-area */
+            overflow: hidden; /*This prevents the sidebar from scrolling*/
+
         }
 
-
-        /* Chat messages area */
-        .sidebar #chat-container { /* Added container for flexbox layout */
-            display: flex;
-            flex-direction: column;
-            height: calc(100% - 55px); /* Adjust as needed for header and input height */
-            overflow: auto;
-            width:100%
-        }
-
-        .sidebar #chat-messages {
-            flex: 1;
+        #chat-container {
+            flex:1; /* Allow chat to grow */
             overflow-y: auto;
-            padding: 10px;
-
-
+            max-height:870px;
+            /* Scrollbar hiding styles */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            -webkit-appearance: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
         }
 
-        .sidebar #chat-messages li {
+        #chat-messages {
+            padding: 20px;
+
+            list-style: none;
+            margin: 0;
+        }
+
+        #chat-messages li {
             margin-bottom: 5px;
             padding: 5px 10px;
             border-radius: 5px;
+
+            background-color: #e8e0ff;
         }
 
-        #chat-messages li:nth-child(even) {
-            background-color: #e6c2ff;
-        }
-        /*#chat-messages li:nth-child(odd) {*/
-        /*    background-color: #d0c4ff;*/
-        /*}*/
 
-        /* Input area */
-        .sidebar .input-area {
+        .input-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: calc(100% - 40px); /* Adjust as needed */
             display: flex;
-            align-items: center; /* Align items vertically */
-            flex-direction: row; /* Arrange input and button horizontally */
+            align-items: center;
             padding: 10px;
-            border-top: 1px solid #b388ff;
-            width:90%;
+            box-sizing: border-box;
         }
 
 
-        .sidebar input[type="text"] {
+        input[type="text"] {
             flex: 1;
             padding: 8px;
             border: 1px solid #b388ff;
             border-radius: 5px;
             margin-right: 10px;
+            box-sizing: border-box;
+            align-items: center;
+
+
+
+            font-size: 14px;
         }
 
-        .sidebar button {
+        button {
             padding: 8px;
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: #663399;
+            background-color: #e6c2ff;
             color: white;
             border: none;
             cursor: pointer;
-        }
-        .sidebar #chat-container {
-            /* Set a fixed height */
-            height: 300px; /* Adjust this height as needed */
-            overflow-y: auto; /* Enable vertical scrolling */
-            /* Optional styles for better look and feel */
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .sidebar #chat-container ul {
-            list-style: none; /*remove default bullet points*/
-            padding: 0; /*remove default padding*/
-            margin: 0; /*remove default margin*/
-            height: 100%; /* make the ul fill the container height*/
-        }
-
-        .sidebar #chat-container li {
-            margin-bottom: 5px; /*add some spacing between messages*/
-        }
-
-        /*Optional styles for input area*/
-        .sidebar .input-area {
-            display: flex;
-            margin-top: 10px; /*add some spacing*/
-        }
-
-        .sidebar .input-area input {
-            flex-grow: 1; /*make the input field take up the remaining space*/
-            margin-right: 5px; /*add some spacing*/
         }
 
         /* Responsive adjustments */
@@ -131,6 +112,7 @@
                 width: 250px;
             }
         }
+
 
 
 
@@ -184,6 +166,8 @@
         }
 
         .add-button {
+            width: 20px;
+            height: 20px;
             background-color: #cec3ff;
             border-radius: 50%;
             padding: 15px;
@@ -198,8 +182,7 @@
         }
 
         .add-button svg {
-            width: 20px;
-            height: 20px;
+
             fill: white;
         }
 
@@ -374,7 +357,7 @@
 </head>
 <body>
 <div class="sidebar">
-    <div id="chat-container">  <!-- This div is crucial -->
+    <div id="chat-container">
         <ul id="chat-messages"></ul>
         <div class="input-area">
             <input type="text" id="message">
@@ -385,7 +368,7 @@
 <div class="main-content">
     <div class="search-container">
         <div class="search">
-            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
             </svg></div>
             <input type="text" placeholder="Search..."/>
@@ -408,6 +391,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+
+
+
     let storedData = localStorage.getItem('userData');
     if(storedData){
         storedData = JSON.parse(storedData)
