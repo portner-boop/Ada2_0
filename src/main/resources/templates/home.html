@@ -7,15 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
-
-
-
-
     <style>
-
         @import url("https://fonts.googleapis.com/css2?family=Gantari:wght@400;700&display=swap");
-
         body {
             font-family: "Gantari", sans-serif;
             background-color: #e8e0ff;
@@ -25,7 +18,6 @@
             height: 100%;
             margin: 0;
         }
-
         .sidebar {
             background-color: #d0c4ff;
             width: 300px;
@@ -39,7 +31,6 @@
             overflow: hidden; /*This prevents the sidebar from scrolling*/
 
         }
-
         #chat-container {
             flex:1; /* Allow chat to grow */
             overflow-y: auto;
@@ -52,35 +43,28 @@
                 display: none;
             }
         }
-
         #chat-messages {
             padding: 20px;
 
             list-style: none;
             margin: 0;
         }
-
         #chat-messages li {
             margin-bottom: 5px;
             padding: 5px 10px;
             border-radius: 5px;
-
             background-color: #e8e0ff;
         }
-
-
         .input-area {
             position: absolute;
             bottom: 0;
             left: 0;
-            width: calc(100% - 40px); /* Adjust as needed */
+            width: calc(100% - 40px);
             display: flex;
             align-items: center;
             padding: 10px;
             box-sizing: border-box;
         }
-
-
         input[type="text"] {
             flex: 1;
             padding: 8px;
@@ -89,12 +73,8 @@
             margin-right: 10px;
             box-sizing: border-box;
             align-items: center;
-
-
-
             font-size: 14px;
         }
-
         button {
             padding: 8px;
             width: 30px;
@@ -105,31 +85,22 @@
             border: none;
             cursor: pointer;
         }
-
-        /* Responsive adjustments */
         @media (max-width: 400px) {
             .sidebar {
                 width: 250px;
             }
         }
 
-
-
-
-
-
         .main-content {
             flex: 1;
             padding: 20px;
         }
-
         .search-container {
             display: flex;
             align-items: center;
             width: 100%;
             margin-bottom: 20px;
         }
-
         .search {
             background-color: #fff;
             border-radius: 20px;
@@ -138,7 +109,6 @@
             align-items: center;
             width: 100%;
         }
-
         .search .icon {
             background-color: #e3e2e5;
             border-radius: 50%;
@@ -150,12 +120,10 @@
             align-items: center;
             justify-content: center;
         }
-
         .search .icon svg {
             width: 18px;
             height: 18px;
         }
-
         .search input {
             border: none;
             background-color: transparent;
@@ -164,7 +132,6 @@
             font-size: 16px;
             outline: none;
         }
-
         .add-button {
             width: 20px;
             height: 20px;
@@ -180,12 +147,10 @@
             justify-content: center;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow */
         }
-
         .add-button svg {
 
             fill: white;
         }
-
         .modal {
             display: none;
             position: fixed;
@@ -197,7 +162,6 @@
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.4);
         }
-
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
@@ -207,7 +171,6 @@
             text-align: center;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Added shadow */
         }
-
         .close {
             color: #aaa;
             float: right;
@@ -215,7 +178,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .close:hover {
             color: black;
         }
@@ -246,15 +208,12 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .search-and-list-container {
             margin-bottom: 20px; /* Adjust as needed */
         }
-
         .search-container {
             margin-bottom: 10px; /* Space between search and list */
         }
-
         .horizontal-list {
             list-style: none;
             padding: 0;
@@ -262,7 +221,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .horizontal-list li {
             margin-bottom: 10px;
             border: 1px solid #ddd; /* Added border for better separation */
@@ -270,21 +228,18 @@
             border-radius: 5px; /* Added rounded corners */
             box-shadow: 0px 2px 5px rgba(0,0,0,0.1); /* Added subtle shadow */
         }
-
         .horizontal-list img {
             max-width: 50px;
             max-height: 50px;
             margin-right: 10px;
             display: block; /* Makes sure the image is a block element */
         }
-
         .horizontal-list a {
             text-decoration: none;
             color: #333;
             display: flex; /* Align image and text */
             align-items: center; /* Vertically align */
         }
-
         .horizontal-list a:hover {
             text-decoration: underline; /* Underline on hover */
         }
@@ -296,14 +251,12 @@
             color: #33263d; /* Dark Purple Text */
             text-align: center; /* Center text */
         }
-
         .modal-content p {
             margin-bottom: 15px;
             font-weight: bold;
             font-family: "Gantari", sans-serif;
             color:  #33263d; /* Medium Purple Heading */
         }
-
         .modal-content input[type="text"],
         .modal-content input[type="file"],
         .modal-content button {
@@ -315,17 +268,14 @@
             background-color: #e8e0ff; /* Lighter Pink Input Background */
             color: #33263d; /* Dark Purple Text */
         }
-
         .modal-content button {
             background-color: #b39dd0; /* Light Purple Button Background */
             color: white;
             cursor: pointer;
         }
-
         .modal-content button:hover {
             background-color:  #33263d; /* Darker Purple on hover */
         }
-
         .modal-content .close {
             position: absolute;
             top: 10px;
@@ -334,7 +284,6 @@
             color: #33263d; /* Dark Purple Close button */
             cursor: pointer;
         }
-
         .modal-content .close:hover {
             color: #664c70; /* Medium Purple on hover */
         }
@@ -347,12 +296,9 @@
                 padding-top: 0; /* Adjust padding as needed */
             }
         }
-
         .shadow {
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-
     </style>
 </head>
 <body>
@@ -382,7 +328,6 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <p>Add New Item:</p>
-<!--        <input type="text" id="itemName" placeholder="Item Name">-->
         <input type="file" id="itemFile">
         <button onclick="addItem()">Add</button>
     </div>
@@ -392,9 +337,6 @@
 
 <script>
 
-
-
-
     fetch('/api/user')
         .then(response => {
             if (!response.ok) {
@@ -403,37 +345,28 @@
             return response.json();
         })
         .then(data => {
-            //  Обновляем данные в localStorage, только если запрос успешен.
             localStorage.setItem('userData', JSON.stringify({...storedData, ...data}));  // Используем spread operator для объединения данных.
             console.log('User data saved to localStorage:', data);
         })
         .catch(error => {
             console.error('Error fetching user data:', error);
-            //Можно обработать ошибку, например, вывести сообщение пользователю.
         });
-
-    //Получение данных из localStorage (после успешного получения с сервера или при загрузке страницы)
     let userDataFromStorage = localStorage.getItem('userData');
     if(userDataFromStorage){
         userDataFromStorage = JSON.parse(userDataFromStorage);
-        //Используем userDataFromStorage, например для отображения данных пользователю.
         console.log('User data from localStorage:', userDataFromStorage);
     }
-
-
     $(document).ready(function($) {
         let cachedFileList = null;
         let lastUpdated = null;
 
         function loadFileList() {
             const now = new Date();
-            const cacheAgeThreshold = 10 * 1000; // 10 seconds cache age
-
+            const cacheAgeThreshold = 10 * 1000;
             if (cachedFileList && now - lastUpdated < cacheAgeThreshold) {
-                updateFileList(cachedFileList); //Use cached data
+                updateFileList(cachedFileList);
                 return;
             }
-
             $.ajax({
                 url: "/api/files",
                 type: "GET",
@@ -448,7 +381,6 @@
                 }
             });
         }
-
         function updateFileList(data) {
             const fileList = $("#fileList");
             if (fileList.length) {
@@ -473,16 +405,11 @@
                 fileList.empty().append(fragment);
             }
         }
-
-
         loadFileList(); //Initial load
         setInterval(loadFileList, 5000); //Check every 5 seconds (adjust as needed)
 
     });
     const chatMessagesUl = document.getElementById('chat-messages');
-
-
-    // Function to fetch and display chat messages
     function fetchAndDisplayMessages() {
         fetch('/app/getall')
             .then(response => {
@@ -509,7 +436,6 @@
     }
     fetchAndDisplayMessages();
 
-
     function openModal() {
         document.getElementById("myModal").style.display = "block";
     }
@@ -519,7 +445,6 @@
     }
 
     function addItem() {
-        // const groupName = document.getElementById("itemName").value;
         const file = document.getElementById("itemFile").files[0];
         const fileName = file.name; // Get filename directly from the File object
 
@@ -657,13 +582,6 @@
     }, function (error) {
         console.error('Error connecting:', error);
     });
-
-
-
-
-
-
-
 
 
 </script>
