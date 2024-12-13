@@ -33,6 +33,5 @@ public class ChatMessage {
     }
 
 
-    // Конструктор для удобства
 
 }

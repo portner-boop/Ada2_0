@@ -1,5 +1,6 @@
 package org.example.springboot.ada2_0.Configuration;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,7 +9,7 @@ import java.util.Collection;
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
-    private int groupId; // поле для group_id
+    private int groupId;
 
     public CustomUserDetails(String username, String password, int groupId) {
         this.username = username;
@@ -22,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null; // Добавьте ваши роли/права доступа при необходимости
+        return null;
     }
 
     @Override

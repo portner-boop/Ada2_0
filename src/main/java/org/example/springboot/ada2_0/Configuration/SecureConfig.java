@@ -1,8 +1,8 @@
 package org.example.springboot.ada2_0.Configuration;
 
 import io.minio.MinioClient;
+import lombok.AllArgsConstructor;
 import org.example.springboot.ada2_0.Props.MinioProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,15 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@AllArgsConstructor
 public class SecureConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private CustomAuthenticationSuccessHandler successHandler;
-
-    @Autowired
-    private MinioProperties minioProperties;
+    private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler successHandler;
+    private final MinioProperties minioProperties;
 
 
     @Bean
@@ -40,7 +37,7 @@ public class SecureConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/registration/user", "/login/**", "/upload").permitAll() //Added /upload
+                        .requestMatchers("/registration/user", "/login/**", "/upload").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -52,8 +49,6 @@ public class SecureConfig {
 
         return http.build();
     }
-
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -40,17 +40,15 @@ public class LoginAndRegistryController {
             model.addAttribute("user", user);
             return "registration";
         }
-       MyUser myUser = registryUserHandler.userHandlerProc(user);
-        if(myUser != null){
-            userHandler.saveUser(myUser);
-            session.setAttribute("user", myUser);
-            return "redirect:/login";
-
-        }else{
+        MyUser myUser = registryUserHandler.userHandlerProc(user);
+        if(myUser == null){
             model.addAttribute("error1", "Такой группы нет или логин занят");
             model.addAttribute("user", user);
             return "registration";
         }
+        userHandler.saveUser(myUser);
+        session.setAttribute("user", myUser);
+        return "redirect:/login";
 
 
     }
@@ -58,10 +56,9 @@ public class LoginAndRegistryController {
     public ResponseEntity<MyUser> getUser(HttpSession session) {
         MyUser user = (MyUser) session.getAttribute("user");
         if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(user);
     }
 
 }

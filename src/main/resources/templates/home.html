@@ -382,7 +382,7 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <p>Add New Item:</p>
-        <input type="text" id="itemName" placeholder="Item Name">
+<!--        <input type="text" id="itemName" placeholder="Item Name">-->
         <input type="file" id="itemFile">
         <button onclick="addItem()">Add</button>
     </div>
@@ -394,12 +394,6 @@
 
 
 
-    let storedData = localStorage.getItem('userData');
-    if(storedData){
-        storedData = JSON.parse(storedData)
-    } else {
-        storedData = {}; // Инициализируем пустым объектом, если данных нет.
-    }
 
     fetch('/api/user')
         .then(response => {
@@ -525,13 +519,12 @@
     }
 
     function addItem() {
-        const groupName = document.getElementById("itemName").value;
+        // const groupName = document.getElementById("itemName").value;
         const file = document.getElementById("itemFile").files[0];
         const fileName = file.name; // Get filename directly from the File object
 
-        if (groupName && file) {
+        if ( file) {
             const formData = new FormData();
-            formData.append('groupName', groupName);
             formData.append('file', file);
             formData.append('fileName', fileName);
 
@@ -630,13 +623,7 @@
         console.log("Disconnected");
     }
 
-
-
     document.getElementById('send').addEventListener('click', sendMessage); // Use the ID to attach event listener
-
-
-
-    // Modal functionality
     var modal = document.getElementById("myModal");
     var btn = document.querySelector(".add-button");
     var span = document.getElementsByClassName("close")[0];
@@ -650,7 +637,7 @@
     }
 
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }
@@ -670,6 +657,7 @@
     }, function (error) {
         console.error('Error connecting:', error);
     });
+
 
 
 
